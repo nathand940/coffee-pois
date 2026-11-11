@@ -1,0 +1,18 @@
+### Get all POIs
+GET http://localhost:3000/api/pois
+
+### Add a new POI
+POST http://localhost:3000/api/pois
+Content-Type: application/json
+
+{
+  "name": "Coffee House"
+}
+
+### Add another POI
+POST http://localhost:3000/api/pois
+Content-Type: application/json
+
+{
+  "name": "Nathan's Beans"
+}
