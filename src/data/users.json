@@ -10,5 +10,11 @@
     "name": "Nathan",
     "email": "test@example.com",
     "password": "$2b$10$RCQJaG7pFl78fkcOrXuPlOkFoPD8GV.1FS8fy97SncN39bv.6ZfuW"
+  },
+  {
+    "id": "1794525054327",
+    "name": "Test User",
+    "email": "test@test.com",
+    "password": "$2b$10$5czH7baaHzB5HJxt78lbNe43imlx6NVBFif4T9iSi8UhDjDDBveyy"
   }
 ]
