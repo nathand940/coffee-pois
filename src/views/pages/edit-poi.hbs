@@ -1,0 +1,22 @@
+<h1>Edit Coffee Shop</h1>
+
+<form action="/poi/{{poi.id}}/edit" method="POST">
+
+  <label>Name</label>
+  <input type="text" name="name" value="{{poi.name}}" required>
+
+  <label>Description</label>
+  <textarea name="description" required>{{poi.description}}</textarea>
+
+  <label>Category</label>
+  <input type="text" name="category" value="{{poi.category}}" required>
+
+  <label>Latitude</label>
+  <input type="number" step="any" name="lat" value="{{poi.lat}}" required>
+
+  <label>Longitude</label>
+  <input type="number" step="any" name="lng" value="{{poi.lng}}" required>
+
+  <button type="submit">Save Changes</button>
+
+</form>

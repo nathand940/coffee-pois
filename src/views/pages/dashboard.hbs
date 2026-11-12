@@ -11,3 +11,16 @@
   {{/each}}
 </ul>
 
+<h1>Your Coffee Shops</h1>
+
+{{#each pois}}
+  <div class="poi-card">
+    <h2>{{name}}</h2>
+    <p>{{description}}</p>
+    <p>Category: {{category}}</p>
+    <p>Location: {{lat}}, {{lng}}</p>
+
+    <a href="/poi/{{id}}/edit">Edit</a>
+    <a href="/poi/{{id}}/delete">Delete</a>
+  </div>
+{{/each}}

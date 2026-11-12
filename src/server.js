@@ -1,6 +1,7 @@
 import Hapi from "@hapi/hapi";
 import Vision from "@hapi/vision";
 import Inert from "@hapi/inert";
+import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 
 import { accountsRoutes } from "./routes/accounts-routes.js";
@@ -16,13 +17,26 @@ const __dirname = dirname(__filename);
 
 async function init() {
   const server = Hapi.server({
-    port: 3000,
-    host: "localhost",
+    port: process.env.PORT || 3000,
+    host: "0.0.0.0",
   });
 
   // Register plugins
   await server.register(Vision);
   await server.register(Inert);
+  await server.register(Cookie);
+
+  //Cookie Auth Strategy
+  server.auth.strategy("session", "cookie", {
+    cookie: {
+      name: "placemark-session",
+      password: "supersecretpassworddontuseinproduction",
+      isSecure: false, // true on HTTPS
+    },
+    redirectTo: "/login",
+  });
+
+  server.auth.default("session"); 
 
   // Configure Handlebars
   server.views({

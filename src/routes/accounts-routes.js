@@ -1,10 +1,11 @@
 import { userModel } from "../models/user-model.js";
-
+import { accountsController } from "../controllers/accounts-controller.js";
 
 export const accountsRoutes = [
   {
     method: "GET",
     path: "/signup",
+    options: { auth: false },
     handler: (request, h) => {
       return h.view("signup", { title: "Sign Up" });
     },
@@ -13,6 +14,7 @@ export const accountsRoutes = [
   {
     method: "POST",
     path: "/signup",
+    options: { auth: false },
     handler: (request, h) => {
       const { name, email, password } = request.payload;
 
@@ -36,6 +38,7 @@ export const accountsRoutes = [
   {
     method: "GET",
     path: "/login",
+    options: { auth: false },
     handler: (request, h) => {
       return h.view("login", { title: "Login" });
     },
@@ -44,25 +47,48 @@ export const accountsRoutes = [
   {
     method: "POST",
     path: "/login",
-    handler: (request, h) => {
-      const { email, password } = request.payload;
-
-      const user = userModel.getUserByEmail(email);
+    options: { auth: false },
+    handler: async (request, h) => {
+      const user = await userModel.authenticate(
+        request.payload.email, 
+        request.payload.password
+    );
 
       if (!user) {
-        console.log("Login failed: user not found");
-        return h.redirect("/login");
-      }
-
-      if (user.password !== password) {
-        console.log("Login failed: wrong password");
-        return h.redirect("/login");
+        return h.view("login", { error: "Invalid email or password" });
       }
 
       console.log("Login successful:", user);
 
+      // Store user ID in session cookie
+      request.cookieAuth.set({ id: user.email });
+
+      return h.redirect("/");
+
+    },
+  },
+
+  {
+    method: "GET",
+    path: "/logout",
+    handler: (request, h) => {
+      request.cookieAuth.clear();
       return h.redirect("/");
     },
+  },
+
+  {
+    method: "GET",
+    path: "/settings",
+    options: { auth: { mode: "required" } },
+    handler: accountsController.showSettings,
+  },
+
+  {
+    method: "POST",
+    path: "/settings",
+    options: { auth: { mode: "required" } },
+    handler: accountsController.updateSettings,
   },
 
 ];
