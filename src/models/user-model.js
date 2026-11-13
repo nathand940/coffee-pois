@@ -23,6 +23,7 @@ export const userModel = {
       name: user.name,
       email: user.email,
       password: hashedPassword,
+      role: "user",
     };
 
     users.push(newUser);
@@ -56,6 +57,21 @@ export const userModel = {
     return users.find(
       (u) => u.email === email
     );
-  }
+  },
+
+  deleteUser(id) {
+
+    let users = jsonStore.read(usersFile);
+
+    users = users.filter(
+      (user) => user.id !== id
+    );
+
+    jsonStore.write(usersFile, users);
+  },
+
+getAllUsers() {
+  return jsonStore.read(usersFile);
+},
 
 };

@@ -8,6 +8,8 @@ import { accountsRoutes } from "./routes/accounts-routes.js";
 import { poiModel } from "./models/poi-model.js";
 import { poiRoutes } from "./routes/poi-routes.js";
 import { apiRoutes } from "./routes/api-routes.js";
+import { adminRoutes }from "./routes/admin-routes.js";
+import { userModel } from "./models/user-model.js";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -31,12 +33,29 @@ async function init() {
     cookie: {
       name: "placemark-session",
       password: "supersecretpassworddontuseinproduction",
-      isSecure: false, // true on HTTPS
+      isSecure: false,
     },
+
     redirectTo: "/login",
+
+    validate: async (request, session) => {
+
+      const user = userModel.getUserByEmail(session.id);
+
+      if (!user) {
+        return {
+          isValid: false,
+        };
+      }
+
+      return {
+        isValid: true,
+        credentials: user,
+      };
+    },
   });
 
-  server.auth.default("session"); 
+  server.auth.default("session");
 
   // Configure Handlebars
   server.views({
@@ -54,6 +73,7 @@ async function init() {
   server.route(accountsRoutes);
   server.route(poiRoutes);
   server.route(apiRoutes);
+  server.route(adminRoutes);
 
 
 

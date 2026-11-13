@@ -64,7 +64,6 @@ export const poiRoutes = [
     },
   },
 
-
   {
     method: "GET",
     path: "/poi/{id}/delete",

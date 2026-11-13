@@ -1,0 +1,20 @@
+<h1>Admin Dashboard</h1>
+
+<h2>Registered Users</h2>
+
+<ul>
+  {{#each users}}
+
+    <li>
+
+      {{name}} ({{email}})
+      - {{role}}
+
+      <a href="/admin/delete-user/{{id}}">
+        Delete
+      </a>
+
+    </li>
+
+  {{/each}}
+</ul>
