@@ -4,6 +4,7 @@ import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 import dotenv from "dotenv";
+import HapiSwagger from "hapi-swagger";
 
 
 import { accountsRoutes } from "./routes/accounts-routes.js";
@@ -32,6 +33,20 @@ async function init() {
   await server.register(Vision);
   await server.register(Inert);
   await server.register(Cookie);
+
+  const swaggerOptions = {
+    info: {
+      title: "Coffee POIs API",
+      version: "3.0.0",
+    },
+  };
+
+  await server.register([
+    {
+      plugin: HapiSwagger,
+      options: swaggerOptions,
+    },
+  ]);
 
   await connectMongo();
 
