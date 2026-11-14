@@ -7,8 +7,8 @@ export const apiRoutes = [
     method: "GET",
     path: "/api/pois",
     options: { auth: { mode: "required" } },
-    handler: (request, h) => {
-      const pois = poiModel.getAllPois();
+    handler: async (request, h) => {
+      const pois = await poiModel.getAllPois();
       return h.response(pois).code(200);
     },
   },
@@ -18,13 +18,13 @@ export const apiRoutes = [
     method: "POST",
     path: "/api/pois",
     options: { auth: { mode: "required" } },
-    handler: (request, h) => {
+    handler: async (request, h) => {
       const { name } = request.payload;
 
       const newPoi = { name };
-      poiModel.addPoi(newPoi);
+      const createdPoi = await poiModel.addPoi(newPoi);
 
-      return h.response(newPoi).code(201);
+      return h.response(createdPoi).code(201);
     },
   },
 

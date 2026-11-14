@@ -2,25 +2,33 @@ import { userModel } from "../models/user-model.js";
 
 export const accountsController = {
 
-  showSettings: (request, h) => {
-    const userId = request.auth.credentials.id;
-    const user = userModel.getUserByEmail(userId);
+  showSettings: async (request, h) => {
+
+    const userId = request.auth.credentials.email;
+
+    const user = await userModel.getUserByEmail(userId);
 
     return h.view("settings", {
       title: "User Settings",
       user,
     });
-  },
+},
 
-  updateSettings: (request, h) => {
-    const userId = request.auth.credentials.id;
-    const user = userModel.getUserByEmail(userId);
+  updateSettings: async (request, h) => {
 
-    const { firstName, lastName, email } = request.payload;
+    const currentEmail =
+      request.auth.credentials.email;
 
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
+    const { name, email } =
+      request.payload;
+
+    await userModel.updateUser(
+      currentEmail,
+      {
+        name,
+        email,
+      }
+    );
 
     return h.redirect("/settings");
   },

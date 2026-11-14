@@ -1,55 +1,26 @@
-import { jsonStore } from "../utils/json-store.js";
-
-const poisFile = "src/data/pois.json";
+import { Poi } from "./poi.js";
 
 export const poiModel = {
-
-  getAllPois() {
-    return jsonStore.read(poisFile);
+  async getAllPois() {
+    return Poi.find().lean();
   },
 
-  addPoi(poi) {
-
-    const pois = jsonStore.read(poisFile);
-
-    pois.push(poi);
-
-    jsonStore.write(poisFile, pois);
+  async addPoi(poi) {
+    return Poi.create(poi);
   },
 
-  getPoiById(id) {
-
-    const pois = jsonStore.read(poisFile);
-
-    return pois.find(
-      (p) => p.id === id
-    );
+  async getPoiById(id) {
+    return Poi.findById(id).lean();
   },
 
-  deletePoi(id) {
-
-    let pois = jsonStore.read(poisFile);
-
-    pois = pois.filter(
-      (p) => p.id !== id
-    );
-
-    jsonStore.write(poisFile, pois);
+  async deletePoi(id) {
+    return Poi.findByIdAndDelete(id);
   },
 
-  updatePoi(id, updatedFields) {
-
-    const pois = jsonStore.read(poisFile);
-
-    const poi = pois.find(
-      (p) => p.id === id
-    );
-
-    if (poi) {
-      Object.assign(poi, updatedFields);
-    }
-
-    jsonStore.write(poisFile, pois);
-  }
-
+  async updatePoi(id, updatedFields) {
+    return Poi.findByIdAndUpdate(id, updatedFields, {
+      returnDocument: "after",
+      runValidators: true,
+    }).lean();
+  },
 };

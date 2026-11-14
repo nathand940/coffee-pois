@@ -3,6 +3,8 @@ import Vision from "@hapi/vision";
 import Inert from "@hapi/inert";
 import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
+import dotenv from "dotenv";
+
 
 import { accountsRoutes } from "./routes/accounts-routes.js";
 import { poiModel } from "./models/poi-model.js";
@@ -10,12 +12,15 @@ import { poiRoutes } from "./routes/poi-routes.js";
 import { apiRoutes } from "./routes/api-routes.js";
 import { adminRoutes }from "./routes/admin-routes.js";
 import { userModel } from "./models/user-model.js";
+import { connectMongo } from "./models/db.js";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+dotenv.config();
 
 async function init() {
   const server = Hapi.server({
@@ -27,6 +32,8 @@ async function init() {
   await server.register(Vision);
   await server.register(Inert);
   await server.register(Cookie);
+
+  await connectMongo();
 
   //Cookie Auth Strategy
   server.auth.strategy("session", "cookie", {
@@ -40,7 +47,7 @@ async function init() {
 
     validate: async (request, session) => {
 
-      const user = userModel.getUserByEmail(session.id);
+      const user = await userModel.getUserByEmail(session.id);
 
       if (!user) {
         return {
@@ -80,8 +87,8 @@ async function init() {
  server.route({
     method: "GET",
     path: "/",
-    handler: (request, h) => {
-      const pois = poiModel.getAllPois();
+    handler: async (request, h) => {
+      const pois = await poiModel.getAllPois();
       return h.view("dashboard", { title: "Placemark Coffee", pois });
     },
   });

@@ -1,10 +1,14 @@
 import { expect } from "chai";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import { connectMongo } from "../src/models/db.js";
 import { poiModel } from "../src/models/poi-model.js";
 
 describe("POI Model Tests", function () {
 
+  let testPoiId;
+
   const poi = {
-    id: "test-poi",
     name: "Coffee House",
     description: "Speciality Coffee",
     category: "Cafe",
@@ -12,43 +16,56 @@ describe("POI Model Tests", function () {
     lng: -7.12,
   };
 
-  it("should add a POI", function () {
-
-    poiModel.addPoi(poi);
-
-    const pois = poiModel.getAllPois();
-
-    expect(pois.length).to.be.greaterThan(0);
+  before(async function () {
+    dotenv.config();
+    await connectMongo();
   });
 
-  it("should find a POI by id", function () {
+  after(async function () {
+    if (testPoiId) {
+      await poiModel.deletePoi(testPoiId);
+    }
 
-    const foundPoi = poiModel.getPoiById("test-poi");
+    await mongoose.disconnect();
+  });
 
-    expect(foundPoi).to.not.equal(undefined);
+  it("should add a POI", async function () {
+    const createdPoi = await poiModel.addPoi(poi);
+    testPoiId = createdPoi._id.toString();
+
+    const pois = await poiModel.getAllPois();
+
+    expect(
+      pois.some((item) => item._id.toString() === testPoiId)
+    ).to.equal(true);
+  });
+
+  it("should find a POI by id", async function () {
+    const foundPoi = await poiModel.getPoiById(testPoiId);
+
+    expect(foundPoi).to.not.equal(null);
     expect(foundPoi.name).to.equal("Coffee House");
   });
 
-  it("should update a POI", function () {
-
-    poiModel.updatePoi("test-poi", {
+  it("should update a POI", async function () {
+    await poiModel.updatePoi(testPoiId, {
       name: "Updated Coffee House",
     });
 
-    const updatedPoi = poiModel.getPoiById("test-poi");
+    const updatedPoi = await poiModel.getPoiById(testPoiId);
 
     expect(updatedPoi.name).to.equal(
       "Updated Coffee House"
     );
   });
 
-  it("should delete a POI", function () {
+  it("should delete a POI", async function () {
+    await poiModel.deletePoi(testPoiId);
 
-    poiModel.deletePoi("test-poi");
+    const deletedPoi = await poiModel.getPoiById(testPoiId);
+    testPoiId = null;
 
-    const poi = poiModel.getPoiById("test-poi");
-
-    expect(poi).to.equal(undefined);
+    expect(deletedPoi).to.equal(null);
   });
 
 });

@@ -7,39 +7,39 @@ export const adminRoutes = [
   path: "/admin",
   options: { auth: { mode: "required" } },
 
-  handler: (request, h) => {
-
-    console.log("Admin route hit");
-    console.log(request.auth.credentials);
+  
+    handler: async (request, h) => {
 
     const currentUser = request.auth.credentials;
 
-    if (currentUser.role !== "admin") {
-      return h.redirect("/");
-    }
+      if (currentUser.role !== "admin") {
+       return h.redirect("/");
+      }
+ 
+      const users = await userModel.getAllUsers();
 
-    const users = userModel.getAllUsers();
+      console.log(users);
 
-    return h.view("admin-dashboard", {
-      title: "Admin Dashboard",
-      users,
-    });
+      return h.view("admin-dashboard", {
+        title: "Admin Dashboard",
+        users,
+      });
+    }, 
   },
-},
 
   {
     method: "GET",
-    path: "/admin/delete-user/{id}",
+    path: "/admin/delete-user/{_id}",
     options: { auth: { mode: "required" } },
 
-    handler: (request, h) => {
+   handler: async (request, h) => {
 
-      userModel.deleteUser(
-        request.params.id
-      );
+    await userModel.deleteUser(
+      request.params._id
+    );
 
-      return h.redirect("/admin");
-    },
+    return h.redirect("/admin");
   },
+ },
 
 ];

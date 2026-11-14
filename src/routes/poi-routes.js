@@ -14,11 +14,10 @@ export const poiRoutes = [
     method: "POST",
     path: "/add-poi",
     options: { auth: { mode: "required" } },
-    handler: (request, h) => {
+    handler: async (request, h) => {
       const { name, description, category, lat, lng } = request.payload;
 
       const newPoi = {
-        id: Date.now().toString(),
         name,
         description,
         category,
@@ -26,7 +25,7 @@ export const poiRoutes = [
         lng: Number(lng),
       };
 
-     poiModel.addPoi(newPoi);
+      await poiModel.addPoi(newPoi);
 
       console.log("POI added:", newPoi);
 
@@ -39,8 +38,8 @@ export const poiRoutes = [
     method: "GET",
     path: "/poi/{id}/edit",
     options: { auth: { mode: "required" } },
-    handler: (request, h) => {
-      const poi = poiModel.getPoiById(request.params.id);
+    handler: async (request, h) => {
+      const poi = await poiModel.getPoiById(request.params.id);
       return h.view("edit-poi", { poi });
     },
   },
@@ -49,10 +48,10 @@ export const poiRoutes = [
     method: "POST",
     path: "/poi/{id}/edit",
     options: { auth: { mode: "required" } },
-    handler: (request, h) => {
+    handler: async (request, h) => {
       const { name, description, category, lat, lng } = request.payload;
 
-      poiModel.updatePoi(request.params.id, {
+      await poiModel.updatePoi(request.params.id, {
         name,
         description,
         category,
@@ -68,8 +67,8 @@ export const poiRoutes = [
     method: "GET",
     path: "/poi/{id}/delete",
     options: { auth: { mode: "required" } },
-    handler: (request, h) => {
-      poiModel.deletePoi(request.params.id);
+    handler: async (request, h) => {
+      await poiModel.deletePoi(request.params.id);
       return h.redirect("/");
     },
   },
