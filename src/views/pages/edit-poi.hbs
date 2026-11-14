@@ -9,7 +9,15 @@
   <textarea name="description" required>{{poi.description}}</textarea>
 
   <label>Category</label>
-  <input type="text" name="category" value="{{poi.category}}" required>
+  <select name="category" required>
+    <option value="">Select Category</option>
+    <option value="Cafe" {{#if (eq poi.category "Cafe")}}selected{{/if}}>Cafe</option>
+    <option value="Roastery" {{#if (eq poi.category "Roastery")}}selected{{/if}}>Roastery</option>
+    <option value="Bakery" {{#if (eq poi.category "Bakery")}}selected{{/if}}>Bakery</option>
+    <option value="Drive-Thru" {{#if (eq poi.category "Drive-Thru")}}selected{{/if}}>Drive-Thru</option>
+    <option value="Coffee Cart" {{#if (eq poi.category "Coffee Cart")}}selected{{/if}}>Coffee Cart</option>
+    <option value="Coffee Van" {{#if (eq poi.category "Coffee Van")}}selected{{/if}}>Coffee Van</option>
+  </select>
 
   <label>Latitude</label>
   <input type="number" step="any" name="lat" value="{{poi.lat}}" required>
