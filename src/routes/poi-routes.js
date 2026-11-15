@@ -15,11 +15,12 @@ export const poiRoutes = [
     path: "/add-poi",
     options: { auth: { mode: "required" } },
     handler: async (request, h) => {
-      const { name, description, category, lat, lng } = request.payload;
+      const { name, description, image, category, lat, lng } = request.payload;
 
       const newPoi = {
         name,
         description,
+        image,
         category,
         lat: Number(lat),
         lng: Number(lng),
@@ -39,8 +40,15 @@ export const poiRoutes = [
     path: "/poi/{id}/edit",
     options: { auth: { mode: "required" } },
     handler: async (request, h) => {
-      const poi = await poiModel.getPoiById(request.params.id);
-      return h.view("edit-poi", { poi });
+
+    const poi =
+      await poiModel.getPoiById(
+        request.params.id
+     );
+
+    console.log(poi);
+
+    return h.view("edit-poi", { poi });
     },
   },
 
@@ -49,11 +57,12 @@ export const poiRoutes = [
     path: "/poi/{id}/edit",
     options: { auth: { mode: "required" } },
     handler: async (request, h) => {
-      const { name, description, category, lat, lng } = request.payload;
+      const { name, description, image, category, lat, lng } = request.payload;
 
       await poiModel.updatePoi(request.params.id, {
         name,
         description,
+        image,
         category,
         lat: Number(lat),
         lng: Number(lng),

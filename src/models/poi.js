@@ -7,6 +7,8 @@ const poiSchema = new mongoose.Schema({
 
   category: String,
 
+  image: String,
+
   lat: Number,
 
   lng: Number,

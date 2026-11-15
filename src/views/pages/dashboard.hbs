@@ -1,26 +1,59 @@
 <h1>Welcome to Placemark Coffee</h1>
 
-<h2>Add a Coffee Shop</h2>
-<a href="/add-poi">Add POI</a>
+<p>Discover and manage your favourite coffee spots.</p>
 
-<h2>All Coffee Shops</h2>
+<a href="/add-poi"> Add New Coffee Shop</a>
 
-<ul>
+<hr>
+
+<h2>Coffee Shops</h2>
+
+{{#if pois}}
+
   {{#each pois}}
-    <li>{{this.name}}</li>
+
+    <div class="poi-card">
+
+      <img
+        src="{{image}}"
+        alt="{{name}}"
+        class="poi-image"
+      >
+
+      <h3>{{name}}</h3>
+
+      <p>{{description}}</p>
+
+      <p>
+        <strong>Category:</strong>
+        {{category}}
+      </p>
+
+      <p>
+        <strong>Location:</strong>
+        {{lat}}, {{lng}}
+      </p>
+
+      <div class="poi-actions">
+
+        <a href="/poi/{{_id}}/edit">
+          Edit
+        </a>
+
+        |
+
+        <a href="/poi/{{_id}}/delete">
+          Delete
+        </a>
+
+      </div>
+
+    </div>
+
   {{/each}}
-</ul>
 
-<h1>Your Coffee Shops</h1>
+{{else}}
 
-{{#each pois}}
-  <div class="poi-card">
-    <h2>{{name}}</h2>
-    <p>{{description}}</p>
-    <p>Category: {{category}}</p>
-    <p>Location: {{lat}}, {{lng}}</p>
+  <p>No coffee shops added yet.</p>
 
-    <a href="/poi/{{_id}}/edit">Edit</a>
-    <a href="/poi/{{_id}}/delete">Delete</a>
-  </div>
-{{/each}}
+{{/if}}

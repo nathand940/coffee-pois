@@ -1,4 +1,5 @@
 import { userModel } from "../models/user-model.js";
+import { poiModel } from "../models/poi-model.js";
 
 export const adminRoutes = [
 
@@ -17,12 +18,34 @@ export const adminRoutes = [
       }
  
       const users = await userModel.getAllUsers();
+      const pois = await poiModel.getAllPois();
 
-      console.log(users);
+      const totalUsers = users.length;
+
+      const adminUsers = users.filter(
+        (user) => user.role === "admin"
+      ).length;
+
+      const totalPois = pois.length;
+
+      const categories = [
+        ...new Set(
+        pois.map((poi) => poi.category)
+        ),
+     ];
+
+     const totalCategories =
+       categories.length;
 
       return h.view("admin-dashboard", {
         title: "Admin Dashboard",
+
         users,
+
+        totalUsers,
+        adminUsers,
+        totalPois,
+        totalCategories,
       });
     }, 
   },

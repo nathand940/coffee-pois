@@ -1,0 +1,27 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.poi-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.poi-image {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.poi-actions {
+  margin-top: 12px;
+}
