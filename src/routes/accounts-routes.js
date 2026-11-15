@@ -6,7 +6,7 @@ export const accountsRoutes = [
     method: "GET",
     path: "/signup",
     options: { auth: false },
-    handler: (request, h) => {
+    handler: async (request, h) => {
       return h.view("signup", { title: "Sign Up" });
     },
   },
@@ -15,18 +15,18 @@ export const accountsRoutes = [
     method: "POST",
     path: "/signup",
     options: { auth: false },
-    handler: (request, h) => {
+    handler: async (request, h) => {
       const { name, email, password } = request.payload;
 
       // Create a user object
       const newUser = {
         name,
         email,
-        password,   // Level 1: store plain text (we fix this in Level 2)
+        password, // Password is hashed inside userModel.addUser()
       };
 
       // Save to in-memory model
-      userModel.addUser(newUser);
+      await userModel.addUser(newUser);
 
       console.log("User added:", newUser);
 
@@ -39,7 +39,7 @@ export const accountsRoutes = [
     method: "GET",
     path: "/login",
     options: { auth: false },
-    handler: (request, h) => {
+    handler: async (request, h) => {
       return h.view("login", { title: "Login" });
     },
   },
@@ -71,7 +71,7 @@ export const accountsRoutes = [
   {
     method: "GET",
     path: "/logout",
-    handler: (request, h) => {
+    handler: async (request, h) => {
       request.cookieAuth.clear();
       return h.redirect("/");
     },
@@ -81,14 +81,18 @@ export const accountsRoutes = [
     method: "GET",
     path: "/settings",
     options: { auth: { mode: "required" } },
-    handler: accountsController.showSettings,
+    handler: async (request, h) => {
+      return accountsController.showSettings(request, h);
+    },
   },
 
   {
     method: "POST",
     path: "/settings",
     options: { auth: { mode: "required" } },
-    handler: accountsController.updateSettings,
+    handler: async (request, h) => {
+      return accountsController.updateSettings(request, h);
+    },
   },
 
 ];

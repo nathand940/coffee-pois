@@ -1,5 +1,6 @@
-import Joi from "@hapi/joi";
 import { poiModel } from "../models/poi-model.js";
+import Jwt from "jsonwebtoken";
+import { userModel } from "../models/user-model.js";
 
 export const apiRoutes = [
 
@@ -7,8 +8,8 @@ export const apiRoutes = [
   {
     method: "GET",
     path: "/api/pois",
-    options: 
-    { auth: { mode: "required" },
+    options: {
+      auth: "jwt",
       description: "Get all POIs",
       notes: "Returns all coffee shops",
       tags: ["api"],
@@ -26,19 +27,10 @@ export const apiRoutes = [
     path: "/api/pois",
 
     options: {
+      auth: "jwt",
       description: "Create POI",
       notes: "Creates a new coffee shop",
       tags: ["api"],
-
-      /*validate: {
-        payload: Joi.object({
-          name: Joi.string().required(),
-          description: Joi.string().required(),
-          category: Joi.string().required(),
-          lat: Joi.number().required(),
-          lng: Joi.number().required(),
-        }),
-      },*/
     },
 
     handler: async (request, h) => {
@@ -49,4 +41,53 @@ export const apiRoutes = [
       return poi;
     },
   },
-]
+
+  {
+    method: "POST",
+    path: "/api/users/authenticate",
+
+    options: {
+      auth: false,
+      tags: ["api"],
+      description: "Authenticate User",
+    },
+
+    handler: async (request, h) => {
+
+      if (!request.payload) {
+        return h.response({
+          message: "Email and password required",
+        }).code(400);
+      }
+
+      const { email, password } =
+        request.payload;
+
+      const user =
+        await userModel.authenticate(
+          email,
+          password
+        );
+
+      if (!user) {
+        return h.response({
+          message: "Invalid credentials",
+        }).code(401);
+      }
+
+      const token = Jwt.sign(
+        {
+          email: user.email,
+        },
+        process.env.JWT_SECRET,
+        {
+          algorithm: "HS256",
+        }
+      );
+
+      return {
+        token,
+      };
+    },
+  },
+];

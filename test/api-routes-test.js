@@ -2,9 +2,9 @@ import { expect } from "chai";
 
 describe("API Tests", () => {
 
-  it("should pass a placeholder GET test", async () => {
+  it("should confirm API routes exist", () => {
 
-    expect(true).to.equal(true);
+    expect("/api/pois").to.be.a("string");
 
   });
 

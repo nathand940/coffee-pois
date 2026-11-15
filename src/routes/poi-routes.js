@@ -5,7 +5,7 @@ export const poiRoutes = [
     method: "GET",
     path: "/add-poi",
     options: { auth: { mode: "required" } },
-    handler: (request, h) => {
+    handler: async (request, h) => {
       return h.view("add-poi", { title: "Add Coffee Shop" });
     },
   },
@@ -45,8 +45,6 @@ export const poiRoutes = [
       await poiModel.getPoiById(
         request.params.id
      );
-
-    console.log(poi);
 
     return h.view("edit-poi", { poi });
     },

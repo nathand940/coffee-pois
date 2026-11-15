@@ -5,6 +5,7 @@ import Cookie from "@hapi/cookie";
 import Handlebars from "handlebars";
 import dotenv from "dotenv";
 import HapiSwagger from "hapi-swagger";
+import HapiJwt from "hapi-auth-jwt2";
 
 
 import { accountsRoutes } from "./routes/accounts-routes.js";
@@ -33,6 +34,7 @@ async function init() {
   await server.register(Vision);
   await server.register(Inert);
   await server.register(Cookie);
+  await server.register(HapiJwt);
 
   const swaggerOptions = {
     info: {
@@ -54,6 +56,8 @@ async function init() {
   server.auth.strategy("session", "cookie", {
     cookie: {
       name: "placemark-session",
+      // Cookie encryption password.
+      // For a real deployment this should come from an environment variable.
       password: "supersecretpassworddontuseinproduction",
       isSecure: false,
     },
@@ -74,6 +78,25 @@ async function init() {
         isValid: true,
         credentials: user,
       };
+    },
+  });
+
+  server.auth.strategy("jwt", "jwt", {
+    key: process.env.JWT_SECRET,
+
+    validate: async (decoded) => {
+
+      const user = await userModel.getUserByEmail(
+        decoded.email
+      );
+
+      return {
+        isValid: !!user,
+      };
+    },
+
+    verifyOptions: {
+      algorithms: ["HS256"],
     },
   });
 
