@@ -1,0 +1,59 @@
+<h1>Welcome to Placemark Coffee</h1>
+
+<p>Discover and manage your favourite coffee spots.</p>
+
+<a href="/add-poi"> Add New Coffee Shop</a>
+
+<hr>
+
+<h2>Coffee Shops</h2>
+
+{{#if pois}}
+
+  {{#each pois}}
+
+    <div class="poi-card">
+
+      <img
+        src="{{image}}"
+        alt="{{name}}"
+        class="poi-image"
+      >
+
+      <h3>{{name}}</h3>
+
+      <p>{{description}}</p>
+
+      <p>
+        <strong>Category:</strong>
+        {{category}}
+      </p>
+
+      <p>
+        <strong>Location:</strong>
+        {{lat}}, {{lng}}
+      </p>
+
+      <div class="poi-actions">
+
+        <a href="/poi/{{_id}}/edit">
+          Edit
+        </a>
+
+        |
+
+        <a href="/poi/{{_id}}/delete">
+          Delete
+        </a>
+
+      </div>
+
+    </div>
+
+  {{/each}}
+
+{{else}}
+
+  <p>No coffee shops added yet.</p>
+
+{{/if}}

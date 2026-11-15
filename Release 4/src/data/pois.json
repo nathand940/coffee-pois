@@ -1,0 +1,10 @@
+[
+  {
+    "id": "1",
+    "name": "Coffee House",
+    "description": "Speciality coffee",
+    "category": "Cafe",
+    "lat": 52.2,
+    "lng": -7.1
+  }
+]
